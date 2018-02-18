@@ -16,7 +16,6 @@ class Router{
 
     use Macroable {
         __call as macroCall;
-        __callStatic as macroCallStatic;
     }
 
     public function __construct()
@@ -27,12 +26,10 @@ class Router{
     public function __call($method, $parameters)
     {
         echo "<pre>".__METHOD__."<pre>";
-        if (static::hasMacro($method)) {
-            return $this->macroCall($method, $parameters);
-        }else{
+        if (!static::hasMacro($method)) {
             static::macro($method, $parameters[1]);
-            return $this->macroCall($method, $parameters);
         }
+        return $this->macroCall($method, $parameters);
 
     }
 

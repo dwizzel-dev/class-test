@@ -28,20 +28,6 @@ trait Macroable
         return isset(static::$macros[$name]);
     }
 
-    public static function __callStatic($method, $parameters)
-    {
-        echo "<pre>".__METHOD__."<pre>";
-        if (! static::hasMacro($method)) {
-            throw new BadMethodCallException("Method {$method} does not exist.");
-        }
-
-        if (static::$macros[$method] instanceof Closure) {
-            return call_user_func_array(Closure::bind(static::$macros[$method], null, __CLASS__), $parameters);
-        }
-
-        return call_user_func_array(static::$macros[$method], $parameters);
-    }
-
     public function __call($method, $parameters)
     {
         echo "<pre>".__METHOD__."<pre>";
@@ -52,6 +38,7 @@ trait Macroable
         $macro = static::$macros[$method];
 
         if ($macro instanceof Closure) {
+            echo "<pre>Closure<pre>";
             return call_user_func_array($macro->bindTo($this, __CLASS__), $parameters);
         }
 
